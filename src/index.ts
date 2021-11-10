@@ -1,1 +1,2 @@
-console.log("Hello world!");
+export { AmazonRocketService } from "./service";
+export * from "./declarations";
