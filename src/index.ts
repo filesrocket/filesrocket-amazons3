@@ -1,2 +1,2 @@
-export { AmazonRocketService } from "./service";
+export { FileService as S3FileService } from "./services/file.service";
 export * from "./declarations";

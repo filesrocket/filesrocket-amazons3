@@ -1,4 +1,4 @@
-import { Paginated, Query, Result } from "filesrocket";
+import { Paginated, ResultEntity } from "filesrocket";
 import S3 from "aws-sdk/clients/s3";
 import { parse } from "path";
 
@@ -20,7 +20,7 @@ export class BaseAmazonRocket {
     });
   }
 
-  paginate(data: S3.ListObjectsV2Output): Paginated<Result> {
+  paginate(data: S3.ListObjectsV2Output): Paginated<ResultEntity> {
     const { Pagination } = this.options;
     const items: any = data.Contents?.map(item => this.builder(item, {
       Bucket: data.Name,
@@ -31,9 +31,9 @@ export class BaseAmazonRocket {
       items,
       size: data.KeyCount || Pagination.default,
       total: data.KeyCount as number,
-      pageToken: data.ContinuationToken || null,
-      nextPageToken: data.NextContinuationToken || null,
-      prevPageToken: null
+      page: data.ContinuationToken,
+      nextPageToken: data.NextContinuationToken,
+      prevPageToken: undefined
     };
   }
 
@@ -42,7 +42,7 @@ export class BaseAmazonRocket {
     return this.s3.getSignedUrl(operation, { Bucket, ...params });
   }
 
-  builder(payload: S3.Object, query: Partial<ParamsUrl>): Result & Query {
+  builder(payload: S3.Object, query: Partial<ParamsUrl>): ResultEntity {
     const { ext, base: name, dir } = parse(payload.Key as string);
     
     return {
