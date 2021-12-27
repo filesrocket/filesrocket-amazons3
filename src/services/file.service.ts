@@ -19,7 +19,7 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
   }
 
   @GenerateFilename()
-  async create(data: FileEntity, query: Query): Promise<ResultEntity> {
+  async create(data: FileEntity, query: Query = {}): Promise<Partial<ResultEntity>> {
     const partialQuery = omitProps(query, ["path"]);
 
     const file = await this.s3.upload({
@@ -32,7 +32,7 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
     return this.builder(file, { Bucket: file.Bucket, Key: file.Key });
   }
 
-  async list(query: Query): Promise<Paginated<ResultEntity>> {
+  async list(query: Query = {}): Promise<Paginated<ResultEntity>> {
     const partialQuery = omitProps(query, ["path", "size", "page", "prevPage"]);
     const { Pagination } = this.options;
 
@@ -59,7 +59,7 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
     return this.paginate(data);
   }
 
-  async remove(path: string, query: Query): Promise<ResultEntity> {
+  async remove(path: string, query: Query = {}): Promise<ResultEntity> {
     const data = await this.list({ path });
     if (!data.items.length) {
       throw new NotFound("The file does not exist.");

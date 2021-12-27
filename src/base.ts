@@ -42,7 +42,7 @@ export class BaseAmazonRocket {
     return this.s3.getSignedUrl(operation, { Bucket, ...params });
   }
 
-  builder(payload: S3.Object, query: Partial<ParamsUrl>): ResultEntity {
+  builder(payload: S3.Object, query: Partial<ParamsUrl>): Partial<ResultEntity> {
     const { ext, base: name, dir } = parse(payload.Key as string);
     
     return {
@@ -52,7 +52,6 @@ export class BaseAmazonRocket {
       ext,
       size: payload.Size as number,
       url: this.generateUrl("getObject", query),
-      createdAt: new Date(payload.LastModified as Date),
       updatedAt: new Date(payload.LastModified as Date)
     }
   }
