@@ -45,8 +45,7 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
       Bucket: query.Bucket || this.options.Bucket,
       MaxKeys: paginate,
       Prefix: query.path,
-      ContinuationToken: query.page,
-      StartAfter: query.prevPage || ''
+      ContinuationToken: query.page
     }).promise();
 
     data.Contents = data.Contents?.map(item =>

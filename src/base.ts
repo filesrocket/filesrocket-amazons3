@@ -20,16 +20,15 @@ export class BaseAmazonRocket {
     });
   }
 
-  paginate(data: S3.ListObjectsV2Output): Paginated<ResultEntity> {
-    const { Pagination } = this.options;
-    const items: any = data.Contents?.map(item => this.builder(item, {
+  protected paginate(data: S3.ListObjectsV2Output): Paginated<ResultEntity> {
+    const items: any[] = data.Contents?.map(item => this.builder(item, {
       Bucket: data.Name,
       Key: item.Key
-    }));
+    })) || [];
 
     return {
       items,
-      size: data.KeyCount || Pagination.default,
+      size: items.length,
       total: data.KeyCount as number,
       page: data.ContinuationToken,
       nextPageToken: data.NextContinuationToken,
@@ -42,9 +41,9 @@ export class BaseAmazonRocket {
     return this.s3.getSignedUrl(operation, { Bucket, ...params });
   }
 
-  builder(payload: S3.Object, query: Partial<ParamsUrl>): Partial<ResultEntity> {
+  protected builder(payload: S3.Object, query: Partial<ParamsUrl>): Partial<ResultEntity> {
     const { ext, base: name, dir } = parse(payload.Key as string);
-    
+
     return {
       ...payload,
       name,
