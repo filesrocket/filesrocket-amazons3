@@ -1,5 +1,6 @@
 import { ServiceMethods, Paginated, FileEntity, ResultEntity, Query } from "filesrocket";
 import { GenerateFilename, Service } from "filesrocket/lib/common";
+import { ManagedUpload } from "aws-sdk/clients/s3";
 import { NotFound } from "filesrocket/lib/errors";
 import { omitProps } from "filesrocket/lib/utils";
 
@@ -20,16 +21,27 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
 
   @GenerateFilename()
   async create(data: FileEntity, query: Query = {}): Promise<Partial<ResultEntity>> {
-    const partialQuery = omitProps(query, ["path"]);
+    return new Promise((resolve, reject) => {
+      const partialQuery = omitProps(query, ["path"]);
 
-    const file = await this.s3.upload({
-      ...partialQuery,
-      Bucket: query.Bucket || this.options.Bucket,
-      Key: query.path ? `${query.path}/${data.name}` : data.name,
-      Body: data.stream
-    }).promise();
+      const callback = (err: any, file: ManagedUpload.SendData) => {
+        if (err) return reject(err);
+        resolve(this.builder(file, {
+          Bucket: file.Bucket,
+          Key: file.Key
+        }));
+      };
 
-    return this.builder(file, { Bucket: file.Bucket, Key: file.Key });
+      this.s3.upload(
+        {
+          ...partialQuery,
+          Bucket: query.Bucket || this.options.Bucket,
+          Key: query.path ? `${query.path}/${data.name}` : data.name,
+          Body: data.stream
+        },
+        callback
+      );
+    });
   }
 
   async list(query: Query = {}): Promise<Paginated<ResultEntity>> {

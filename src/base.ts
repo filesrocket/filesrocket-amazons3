@@ -41,11 +41,15 @@ export class BaseAmazonRocket {
     return this.s3.getSignedUrl(operation, { Bucket, ...params });
   }
 
-  protected builder(payload: S3.Object, query: Partial<ParamsUrl>): Partial<ResultEntity> {
+  protected builder(
+    payload: S3.Object,
+    query: Partial<ParamsUrl>
+  ): Partial<ResultEntity> {
     const { ext, base: name, dir } = parse(payload.Key as string);
 
     return {
       ...payload,
+      id: payload.Key,
       name,
       dir,
       ext,
