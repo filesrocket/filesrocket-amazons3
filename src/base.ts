@@ -11,6 +11,12 @@ export class BaseAmazonRocket {
     this.s3 = new S3(options);
   }
 
+  /**
+   * Create a Bucket Amazon S3. Amazon S3 buckets, which are
+   * similar to file folders, store objects, which consist
+   * of data and its descriptive metadata.
+   * @param name Bucket name.
+   */
   async createBucket(name: string): Promise<string> {
     return new Promise((resolve, reject) => {
       this.s3.createBucket({ Bucket: name }, (err, data) => {
@@ -36,6 +42,11 @@ export class BaseAmazonRocket {
     };
   }
 
+  /**
+   * Generate a url for the files.
+   * @param operation Operation.
+   * @param params Params.
+   */
   generateUrl(operation: Operation, params: Partial<ParamsUrl>): string {
     const Bucket: string = this.options.Bucket;
     return this.s3.getSignedUrl(operation, { Bucket, ...params });

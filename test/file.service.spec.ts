@@ -67,14 +67,14 @@ describe("Deleting files", () => {
     const data: Paginated<ResultEntity> = await getFiles({ size: 1 });
     const file: ResultEntity = data.items[0];
 
-    const entity: ResultEntity = await deleteOneFile(file.Key);
+    const entity: ResultEntity = await deleteOneFile(file.id);
     expect(file.name).toBe(entity.name);
   });
 
   test("Delete many files", async () => {
     const data = await getFiles();
 
-    const keys: string[] = data.items.map(item => item.Key);
+    const keys: string[] = data.items.map(item => item.id);
     const items = await deleteManyFiles(keys);
 
     expect(items).toHaveLength(data.items.length);
