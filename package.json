@@ -22,12 +22,10 @@
     "filemanagement"
   ],
   "scripts": {
-    "serve": "nodemon",
     "build": "tsc -p ."
   },
   "dependencies": {
-    "aws-sdk": "^2.1012.0",
-    "http-errors": "^1.8.0"
+    "aws-sdk": "2.1012.0"
   },
   "devDependencies": {
     "@types/http-errors": "^1.8.1",
