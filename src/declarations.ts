@@ -1,7 +1,7 @@
-import { Pagination, Query } from "filesrocket";
-import S3 from "aws-sdk/clients/s3";
+import { Pagination, Query } from 'filesrocket'
+import S3 from 'aws-sdk/clients/s3'
 
-export type Operation = "getObject" | "putObject";
+export type Operation = 'getObject' | 'putObject';
 
 export interface AmazonConfig extends S3.ClientConfiguration {
   Pagination: Pagination;
