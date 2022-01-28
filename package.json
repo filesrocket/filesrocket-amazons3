@@ -22,13 +22,12 @@
     "filemanagement"
   ],
   "scripts": {
-    "serve": "nodemon",
     "build": "tsc -p .",
     "test": "jest",
     "test:w": "npm run test -- --watch"
   },
   "dependencies": {
-    "aws-sdk": "^2.1012.0"
+    "aws-sdk": "2.1012.0"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",

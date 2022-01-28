@@ -1,5 +1,5 @@
 import { ServiceMethods, Paginated, FileEntity, ResultEntity, Query } from "filesrocket";
-import { GenerateFilename, Service } from "filesrocket/lib/common";
+import { Filename, Service } from "filesrocket/lib/common";
 import { ManagedUpload } from "aws-sdk/clients/s3";
 import { NotFound } from "filesrocket/lib/errors";
 import { omitProps } from "filesrocket/lib/utils";
@@ -19,7 +19,7 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
       .catch(() => console.error("Your bucket already exist."));
   }
 
-  @GenerateFilename()
+  @Filename()
   async create(data: FileEntity, query: Query = {}): Promise<Partial<ResultEntity>> {
     return new Promise((resolve, reject) => {
       const partialQuery = omitProps(query, ["path"]);
