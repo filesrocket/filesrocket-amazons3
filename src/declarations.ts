@@ -1,4 +1,4 @@
-import { Pagination, Query } from 'filesrocket'
+import { Pagination, Query } from '@filesrocket/filesrocket'
 import S3 from 'aws-sdk/clients/s3'
 
 export type Operation = 'getObject' | 'putObject';

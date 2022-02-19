@@ -1,15 +1,20 @@
-import { ServiceMethods, Paginated, FileEntity, ResultEntity, Query } from 'filesrocket'
-import { Filename, Service } from 'filesrocket/lib/common'
+import {
+  ServiceMethods,
+  Paginated,
+  FileEntity,
+  ResultEntity,
+  Query
+} from '@filesrocket/filesrocket'
+import { Filename, Service } from '@filesrocket/filesrocket/lib/common'
+import { NotFound } from '@filesrocket/filesrocket/lib/errors'
+import { omitProps } from '@filesrocket/filesrocket/lib/utils'
 import { ManagedUpload } from 'aws-sdk/clients/s3'
-import { NotFound } from 'filesrocket/lib/errors'
-import { omitProps } from 'filesrocket/lib/utils'
 
 import { AmazonConfig } from '../declarations'
 import { BaseAmazonRocket } from '../base'
 
 @Service({
-  type: 'Files',
-  name: 's3'
+  type: 'Files'
 })
 export class FileService extends BaseAmazonRocket implements ServiceMethods {
   constructor (options: AmazonConfig) {
@@ -20,16 +25,21 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
   }
 
   @Filename()
-  async create (data: FileEntity, query: Query = {}): Promise<Partial<ResultEntity>> {
+  async create (
+    data: FileEntity,
+    query: Query = {}
+  ): Promise<Partial<ResultEntity>> {
     return new Promise((resolve, reject) => {
       const partialQuery = omitProps(query, ['path'])
 
       const callback = (err: any, file: ManagedUpload.SendData) => {
         if (err) return reject(err)
-        resolve(this.builder(file, {
-          Bucket: file.Bucket,
-          Key: file.Key
-        }))
+        resolve(
+          this.builder(file, {
+            Bucket: file.Bucket,
+            Key: file.Key
+          })
+        )
       }
 
       this.s3.upload(
@@ -48,23 +58,25 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
     const partialQuery = omitProps(query, ['path', 'size', 'page', 'prevPage'])
     const { Pagination } = this.options
 
-    const paginate: number = query.size <= Pagination.max
-      ? query.size
-      : Pagination.default
+    const paginate: number =
+      query.size <= Pagination.max ? query.size : Pagination.default
 
-    const data = await this.s3.listObjectsV2({
-      ...partialQuery,
-      Bucket: query.Bucket || this.options.Bucket,
-      MaxKeys: paginate,
-      Prefix: query.path,
-      ContinuationToken: query.page
-    }).promise()
-
-    data.Contents = data.Contents?.map(item =>
-      this.builder(item, {
+    const data = await this.s3
+      .listObjectsV2({
+        ...partialQuery,
         Bucket: query.Bucket || this.options.Bucket,
-        Key: item.Key
-      }) as any
+        MaxKeys: paginate,
+        Prefix: query.path,
+        ContinuationToken: query.page
+      })
+      .promise()
+
+    data.Contents = data.Contents?.map(
+      (item) =>
+        this.builder(item, {
+          Bucket: query.Bucket || this.options.Bucket,
+          Key: item.Key
+        }) as any
     )
 
     return this.paginate(data)
@@ -79,11 +91,13 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
     const partialQuery = omitProps(query, ['path', 'size', 'page', 'id'])
     const file = data.items[0]
 
-    await this.s3.deleteObject({
-      ...partialQuery,
-      Bucket: query.Bucket || this.options.Bucket,
-      Key: file.Key
-    }).promise()
+    await this.s3
+      .deleteObject({
+        ...partialQuery,
+        Bucket: query.Bucket || this.options.Bucket,
+        Key: file.Key
+      })
+      .promise()
 
     return file
   }

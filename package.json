@@ -1,7 +1,7 @@
 {
-  "name": "filesrocket-s3",
+  "name": "@filesrocket/s3",
   "version": "0.1.0",
-  "description": "Node.js package to manage files from Amazon Storage S3 service.",
+  "description": "Filerocket service to manage files from Amazon Storage S3 service.",
   "main": "lib/index.js",
   "types": "lib",
   "author": {
