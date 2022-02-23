@@ -1,11 +1,11 @@
-import { Paginated, Query, ResultEntity } from 'filesrocket'
+import { Paginated, Query, ResultEntity } from '@filesrocket/filesrocket'
 import { createReadStream } from 'fs'
 import { parse } from 'path'
 
 import { environments } from '../config/environments'
-import { S3FileService } from '../../src/index'
+import { AmazonS3Service } from '../../src/index'
 
-const service = new S3FileService(environments.s3)
+const service = new AmazonS3Service(environments.s3)
 
 export async function uploadFile (
   path: string,
@@ -13,7 +13,7 @@ export async function uploadFile (
 ): Promise<Partial<ResultEntity>> {
   const { base: name } = parse(path)
 
-  return service.create({
+  return service.file.create({
     name,
     stream: createReadStream(path),
     fieldname: 'files',
@@ -32,13 +32,13 @@ export async function uploadManyFiles (
 export async function getFiles (
   query: Query = {}
 ): Promise<Paginated<ResultEntity>> {
-  return service.list(query)
+  return service.file.list(query)
 }
 
 export async function deleteOneFile (
   key: string
 ): Promise<ResultEntity> {
-  return service.remove(key)
+  return service.file.remove(key)
 }
 
 export async function deleteManyFiles (

@@ -58,18 +58,18 @@ export class BaseAmazonRocket {
   protected builder (
     payload: S3.Object,
     query: Partial<ParamsUrl>
-  ): Partial<ResultEntity> {
+  ): ResultEntity {
     const { ext, base: name, dir } = parse(payload.Key as string)
 
     return {
       ...payload,
-      id: payload.Key,
+      id: payload.Key as string,
       name,
       dir,
       ext,
       size: payload.Size as number,
       url: this.generateUrl('getObject', query),
       updatedAt: new Date(payload.LastModified as Date)
-    }
+    } as ResultEntity
   }
 }

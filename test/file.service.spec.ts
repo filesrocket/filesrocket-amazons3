@@ -1,4 +1,4 @@
-import { Paginated, ResultEntity } from 'filesrocket'
+import { Paginated, ResultEntity } from '@filesrocket/filesrocket'
 import { resolve } from 'path'
 
 import {
@@ -8,7 +8,7 @@ import {
   deleteOneFile,
   deleteManyFiles
 } from './helpers/file.helper'
-jest.mock('filesrocket')
+jest.mock('@filesrocket/filesrocket')
 
 const FILESNAMES: string[] = [
   'one.png',

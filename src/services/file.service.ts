@@ -28,18 +28,15 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
   async create (
     data: FileEntity,
     query: Query = {}
-  ): Promise<Partial<ResultEntity>> {
+  ): Promise<ResultEntity> {
     return new Promise((resolve, reject) => {
       const partialQuery = omitProps(query, ['path'])
 
       const callback = (err: any, file: ManagedUpload.SendData) => {
         if (err) return reject(err)
-        resolve(
-          this.builder(file, {
-            Bucket: file.Bucket,
-            Key: file.Key
-          })
-        )
+        const { Bucket, Key } = file
+        const entity = this.builder(file, { Bucket, Key })
+        resolve(entity)
       }
 
       this.s3.upload(

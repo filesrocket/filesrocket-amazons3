@@ -1,2 +1,2 @@
-export { FileService as S3FileService } from './services/file.service'
+export { AmazonS3Service } from './service'
 export * from './declarations'
