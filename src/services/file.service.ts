@@ -25,10 +25,7 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
   }
 
   @Filename()
-  async create (
-    data: FileEntity,
-    query: Query = {}
-  ): Promise<ResultEntity> {
+  async create (data: FileEntity, query: Query = {}): Promise<ResultEntity> {
     return new Promise((resolve, reject) => {
       const partialQuery = omitProps(query, ['path'])
 
