@@ -4,10 +4,10 @@ import {
   FileEntity,
   ResultEntity,
   Query
-} from '@filesrocket/filesrocket'
-import { Filename, Service } from '@filesrocket/filesrocket/lib/common'
-import { NotFound } from '@filesrocket/filesrocket/lib/errors'
-import { omitProps } from '@filesrocket/filesrocket/lib/utils'
+} from 'filesrocket'
+import { Filename, Service } from 'filesrocket/lib/common'
+import { NotFound } from 'filesrocket/lib/errors'
+import { omitProps } from 'filesrocket/lib/utils'
 import { ManagedUpload } from 'aws-sdk/clients/s3'
 
 import { AmazonConfig } from '../declarations'

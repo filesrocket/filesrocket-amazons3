@@ -1,4 +1,5 @@
-import { FileManager } from '@filesrocket/filesrocket/lib'
+import { FileManager } from 'filesrocket'
+
 import { FileService } from './services/file.service'
 import { AmazonConfig } from './declarations'
 

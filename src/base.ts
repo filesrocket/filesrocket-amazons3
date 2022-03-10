@@ -1,4 +1,4 @@
-import { Paginated, ResultEntity } from '@filesrocket/filesrocket'
+import { Paginated, ResultEntity } from 'filesrocket'
 import S3 from 'aws-sdk/clients/s3'
 import { parse } from 'path'
 

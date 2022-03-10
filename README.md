@@ -2,17 +2,23 @@
 [Filesrocket](https://github.com/IvanZM123/filesrocket) service to manage your files with [Amazon S3](https://aws.amazon.com/s3/) services.
 
 ## Install
+
 ```
-npm i filesrocket-s3
+npm i filesrocket-amazons3
 ```
 
 ## Usage
 To use the service add the following content.
 
 ```ts
-import { AmazonConfig, S3FileService } from "filesrocket-s3";
+import { Filesrocket } from "filesrocket";
+import { AmazonS3Service } from "filesrocket-amazons3";
 
-const options: AmazonConfig = {
+// Initialize filesrocket
+const filesrocket = new Filesrocket();
+
+// Setting service
+const amazons3 = new AmazonS3Service({
   Pagination: { default: 15, max: 50 },
   Bucket: "filesrocket",
   region: "<Your Region>",
@@ -20,27 +26,16 @@ const options: AmazonConfig = {
     accessKeyId: "<Your ACCESS_KEY>",
     secretAccessKey: "<Your SECRET_KEY>"
   }
-};
+});
 
-app.use(
-  RocketRouter.forRoot({
-    path: "storage",
-    services: [
-      { service: new S3FileService(options) }
-    ]
-  })
-);
+// Register services
+filesrocket.register("amazons3", local.file)
+
+// Recovering service
+const fileService = filesrocket.service("amazons3")
+
+// Recovering controller
+const fileController = filesrocket.controller("amazons3")
 ```
 
-For interact with the files enter to the following enpoint.
-
-**Files**: http://localhost:3030/storage/s3/files
-
 > **Note**: To use this service, you need to have an account, [enter](https://aws.amazon.com/s3/) here and follow the steps.
-
-## Examples
-We have created this repository to help as an example guide.
-
-| Framework | Repository |
-| --------- | ---------- |
-| Express | [filesrocket-express-app](https://github.com/IvanZM123/filesrocket-express-app) |

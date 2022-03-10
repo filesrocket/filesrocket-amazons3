@@ -1,4 +1,4 @@
-import { Paginated, Query, ResultEntity } from '@filesrocket/filesrocket'
+import { Paginated, Query, ResultEntity } from 'filesrocket'
 import { createReadStream } from 'fs'
 import { parse } from 'path'
 
