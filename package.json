@@ -6,12 +6,11 @@
   "types": "lib",
   "author": {
     "name": "Ivan Zaldivar",
-    "email": "ivanzaldivar16@gmail.com",
-    "url": "https://github.com/IvanZM123"
+    "url": "https://github.com/thebug404"
   },
   "license": "MIT",
   "repository": {
-    "url": "https://github.com/IvanZM123/filesrocket-amazon"
+    "url": "https://github.com/Filesrocket/filesrocket-amazons3"
   },
   "keywords": [
     "upload",
@@ -22,7 +21,7 @@
     "filemanagement"
   ],
   "scripts": {
-    "build": "tsc -p .",
+    "build": "npm run test && npm run lint && tsc -p .",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint --fix . --ext .ts",
     "test": "jest",

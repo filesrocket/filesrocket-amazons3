@@ -1,48 +1,47 @@
-import { Paginated, Query, ResultEntity } from 'filesrocket'
+import { Paginated, Query, OutputEntity, InputFile } from 'filesrocket'
 import { createReadStream } from 'fs'
 import { parse } from 'path'
 
-import { environments } from '../config/environments'
-import { AmazonS3Service } from '../../src/index'
-
-const service = new AmazonS3Service(environments.s3)
+import service from '../config/amazon'
 
 export async function uploadFile (
   path: string,
   query: Query = {}
-): Promise<Partial<ResultEntity>> {
+): Promise<Partial<OutputEntity>> {
   const { base: name } = parse(path)
 
-  return service.file.create({
+  const data: InputFile = {
     name,
     stream: createReadStream(path),
     fieldname: 'files',
     encoding: '',
     mimetype: ''
-  }, query)
+  }
+
+  return service.create(data, query)
 }
 
 export async function uploadManyFiles (
   paths: string[],
   query: Query = {}
-): Promise<Partial<ResultEntity>[]> {
+): Promise<Partial<OutputEntity>[]> {
   return Promise.all(paths.map(path => uploadFile(path, query)))
 }
 
 export async function getFiles (
   query: Query = {}
-): Promise<Paginated<ResultEntity>> {
-  return service.file.list(query)
+): Promise<Paginated<OutputEntity>> {
+  return service.list(query)
 }
 
 export async function deleteOneFile (
   key: string
-): Promise<ResultEntity> {
-  return service.file.remove(key)
+): Promise<OutputEntity> {
+  return service.remove(key)
 }
 
 export async function deleteManyFiles (
   keys: string[]
-): Promise<ResultEntity[]> {
+): Promise<OutputEntity[]> {
   return Promise.all(keys.map(key => deleteOneFile(key)))
 }

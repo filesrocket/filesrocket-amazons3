@@ -1,11 +1,10 @@
 import {
   ServiceMethods,
   Paginated,
-  FileEntity,
-  ResultEntity,
+  InputFile,
+  OutputEntity,
   Query
 } from 'filesrocket'
-import { Filename, Service } from 'filesrocket/lib/common'
 import { NotFound } from 'filesrocket/lib/errors'
 import { omitProps } from 'filesrocket/lib/utils'
 import { ManagedUpload } from 'aws-sdk/clients/s3'
@@ -13,9 +12,6 @@ import { ManagedUpload } from 'aws-sdk/clients/s3'
 import { AmazonConfig } from '../declarations'
 import { BaseAmazonRocket } from '../base'
 
-@Service({
-  type: 'Files'
-})
 export class FileService extends BaseAmazonRocket implements ServiceMethods {
   constructor (options: AmazonConfig) {
     super(options)
@@ -24,8 +20,7 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
       .catch(() => console.error('Your bucket already exist.'))
   }
 
-  @Filename()
-  async create (data: FileEntity, query: Query = {}): Promise<ResultEntity> {
+  async create (data: InputFile, query: Query = {}): Promise<OutputEntity> {
     return new Promise((resolve, reject) => {
       const partialQuery = omitProps(query, ['path'])
 
@@ -48,7 +43,7 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
     })
   }
 
-  async list (query: Query = {}): Promise<Paginated<ResultEntity>> {
+  async list (query: Query = {}): Promise<Paginated<OutputEntity>> {
     const partialQuery = omitProps(query, ['path', 'size', 'page', 'prevPage'])
     const { Pagination } = this.options
 
@@ -76,7 +71,7 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
     return this.paginate(data)
   }
 
-  async remove (path: string, query: Query = {}): Promise<ResultEntity> {
+  async remove (path: string, query: Query = {}): Promise<OutputEntity> {
     const data = await this.list({ path })
     if (!data.items.length) {
       throw new NotFound('The file does not exist.')

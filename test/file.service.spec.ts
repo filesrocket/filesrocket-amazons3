@@ -1,4 +1,4 @@
-import { Paginated, ResultEntity } from 'filesrocket'
+import { Paginated, OutputEntity } from 'filesrocket'
 import { resolve } from 'path'
 
 import {
@@ -8,6 +8,7 @@ import {
   deleteOneFile,
   deleteManyFiles
 } from './helpers/file.helper'
+
 jest.mock('filesrocket')
 
 const FILESNAMES: string[] = [
@@ -40,7 +41,7 @@ describe('Uploading files', () => {
   test('Upload single file', async () => {
     const entity = await uploadFile(path)
     expect(typeof entity).toBe('object')
-    expect(entity.name).not.toBe(name)
+    expect(entity.name).toBe(name)
   })
 
   test('Upload many files in a directory', async () => {
@@ -52,7 +53,7 @@ describe('Uploading files', () => {
 describe('Getting files', () => {
   test('Gets 3 files', async () => {
     const SIZE: number = 3
-    const data: Paginated<ResultEntity> = await getFiles({ size: SIZE })
+    const data: Paginated<OutputEntity> = await getFiles({ size: SIZE })
     expect(data.items).toHaveLength(SIZE)
   })
 
@@ -64,10 +65,10 @@ describe('Getting files', () => {
 
 describe('Deleting files', () => {
   test('Delete 1 file', async () => {
-    const data: Paginated<ResultEntity> = await getFiles({ size: 1 })
-    const file: ResultEntity = data.items[0]
+    const data: Paginated<OutputEntity> = await getFiles({ size: 1 })
+    const file: OutputEntity = data.items[0]
 
-    const entity: ResultEntity = await deleteOneFile(file.id)
+    const entity: OutputEntity = await deleteOneFile(file.id)
     expect(file.name).toBe(entity.name)
   })
 
