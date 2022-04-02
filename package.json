@@ -1,6 +1,6 @@
 {
   "name": "filesrocket-amazons3",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Filerocket service to manage files from Amazon Storage S3 service",
   "main": "lib/index.js",
   "types": "lib",
@@ -8,13 +8,20 @@
     "name": "Ivan Zaldivar",
     "url": "https://github.com/thebug404"
   },
-  "license": "MIT",
   "repository": {
     "url": "https://github.com/Filesrocket/filesrocket-amazons3"
   },
   "bugs": {
     "url": "https://github.com/Filesrocket/filesrocket-amazons3/issues"
   },
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "LICENCE",
+    "README.md",
+    "lib/**"
+  ],
   "keywords": [
     "upload",
     "upload-files",
@@ -23,6 +30,7 @@
     "storage",
     "filemanagement"
   ],
+  "license": "MIT",
   "scripts": {
     "build": "npm run test && npm run lint && tsc -p .",
     "lint": "eslint . --ext .ts",
@@ -32,7 +40,7 @@
   },
   "dependencies": {
     "aws-sdk": "2.1012.0",
-    "filesrocket": "^0.0.3"
+    "filesrocket": "^0.0.4"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",
