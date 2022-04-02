@@ -48,45 +48,42 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
     const { Pagination } = this.options
 
     const paginate: number =
-      query.size <= Pagination.max ? query.size : Pagination.default
+      query.size <= Pagination.max
+        ? query.size
+        : Pagination.default
+
+    const Bucket = query.Bucket || this.options.Bucket
 
     const data = await this.s3
       .listObjectsV2({
         ...partialQuery,
-        Bucket: query.Bucket || this.options.Bucket,
+        Bucket,
         MaxKeys: paginate,
         Prefix: query.path,
         ContinuationToken: query.page
       })
       .promise()
 
-    data.Contents = data.Contents?.map(
-      (item) =>
-        this.builder(item, {
-          Bucket: query.Bucket || this.options.Bucket,
-          Key: item.Key
-        }) as any
-    )
+    data.Contents = data.Contents?.map((item) => {
+      const Bucket = query.Bucket || this.options.Bucket
+      const Key = item.Key
+      return this.builder(item, { Bucket, Key }) as any
+    })
 
     return this.paginate(data)
   }
 
-  async remove (path: string, query: Query = {}): Promise<OutputEntity> {
-    const data = await this.list({ path })
+  async remove (id: string, query: Query = {}): Promise<OutputEntity> {
+    const data = await this.list({ path: id })
+
     if (!data.items.length) {
-      throw new NotFound('The file does not exist.')
+      throw new NotFound('File does not exist')
     }
 
-    const partialQuery = omitProps(query, ['path', 'size', 'page', 'id'])
+    const Bucket = query.Bucket || this.options.Bucket
     const file = data.items[0]
 
-    await this.s3
-      .deleteObject({
-        ...partialQuery,
-        Bucket: query.Bucket || this.options.Bucket,
-        Key: file.Key
-      })
-      .promise()
+    await this.s3.deleteObject({ ...query, Bucket, Key: id }).promise()
 
     return file
   }
