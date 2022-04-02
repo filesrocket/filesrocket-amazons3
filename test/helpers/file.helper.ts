@@ -1,4 +1,4 @@
-import { Paginated, Query, OutputEntity, InputFile } from 'filesrocket'
+import { Paginated, Query, OutputEntity, InputEntity } from 'filesrocket'
 import { createReadStream } from 'fs'
 import { parse } from 'path'
 
@@ -10,7 +10,7 @@ export async function uploadFile (
 ): Promise<Partial<OutputEntity>> {
   const { base: name } = parse(path)
 
-  const data: InputFile = {
+  const data: InputEntity = {
     name,
     stream: createReadStream(path),
     fieldname: 'files',

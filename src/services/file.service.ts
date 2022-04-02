@@ -1,7 +1,7 @@
 import {
   ServiceMethods,
   Paginated,
-  InputFile,
+  InputEntity,
   OutputEntity,
   Query
 } from 'filesrocket'
@@ -20,7 +20,7 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
       .catch(() => console.error('Your bucket already exist.'))
   }
 
-  async create (data: InputFile, query: Query = {}): Promise<OutputEntity> {
+  async create (data: InputEntity, query: Query = {}): Promise<OutputEntity> {
     return new Promise((resolve, reject) => {
       const partialQuery = omitProps(query, ['path'])
 
