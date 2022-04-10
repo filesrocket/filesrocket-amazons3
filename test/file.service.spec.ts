@@ -81,6 +81,12 @@ describe('Getting files', () => {
       .rejects
       .toThrowError('File does not exist')
   })
+
+  test('Get a file when an empty id is sent', async () => {
+    await expect(findOne(''))
+      .rejects
+      .toThrowError('Id is empty')
+  })
 })
 
 describe('Deleting files', () => {

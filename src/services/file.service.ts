@@ -5,7 +5,7 @@ import {
   OutputEntity,
   Query
 } from 'filesrocket'
-import { NotFound } from 'filesrocket/lib/errors'
+import { BadRequest, NotFound } from 'filesrocket/lib/errors'
 import { omitProps } from 'filesrocket/lib/utils'
 import { ManagedUpload } from 'aws-sdk/clients/s3'
 
@@ -73,6 +73,8 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
   }
 
   async get (id: string, query: Query = {}): Promise<OutputEntity> {
+    if (!id) throw new BadRequest('Id is empty')
+
     const partialQuery = omitProps(query, ['path'])
 
     const Bucket = query.Bucket || this.options.Bucket
