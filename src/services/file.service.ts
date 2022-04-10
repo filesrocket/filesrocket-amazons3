@@ -65,7 +65,6 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
       .promise()
 
     data.Contents = data.Contents?.map((item) => {
-      const Bucket = query.Bucket || this.options.Bucket
       const Key = item.Key
       return this.builder(item, { Bucket, Key }) as any
     })
@@ -73,17 +72,40 @@ export class FileService extends BaseAmazonRocket implements ServiceMethods {
     return this.paginate(data)
   }
 
-  async remove (id: string, query: Query = {}): Promise<OutputEntity> {
-    const data = await this.list({ path: id })
-
-    if (!data.items.length) {
-      throw new NotFound('File does not exist')
-    }
+  async get (id: string, query: Query = {}): Promise<OutputEntity> {
+    const partialQuery = omitProps(query, ['path'])
 
     const Bucket = query.Bucket || this.options.Bucket
-    const file = data.items[0]
 
-    await this.s3.deleteObject({ ...query, Bucket, Key: id }).promise()
+    const payload = {
+      ...partialQuery,
+      Prefix: id,
+      Bucket
+    }
+
+    const { Contents = [] } = await this.s3
+      .listObjectsV2(payload)
+      .promise()
+
+    const items = Contents.map(item => {
+      const Key = item.Key
+      return this.builder(item, { Bucket, Key })
+    })
+
+    const file = items.at(0)
+
+    if (!file) throw new NotFound('File does not exist')
+
+    return file
+  }
+
+  async remove (id: string, query: Query = {}): Promise<OutputEntity> {
+    const file = await this.get(id, query)
+
+    const Bucket = query.Bucket || this.options.Bucket
+    const payload = { ...query, Bucket, Key: id }
+
+    await this.s3.deleteObject(payload).promise()
 
     return file
   }

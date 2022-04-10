@@ -1,6 +1,8 @@
 # filesrocket-amazons3
 
-[Filesrocket](https://github.com/filesrocket/filesrocket) service to manage your files with [Amazon S3](https://aws.amazon.com/s3) services.
+[![npm version](https://badge.fury.io/js/filesrocket-amazons3.svg)](https://badge.fury.io/js/filesrocket-amazons3) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
+[**Filesrocket**](https://github.com/filesrocket/filesrocket) service to manage your files with [**Amazon S3**](https://aws.amazon.com/s3)
 
 ## Install
 
@@ -22,7 +24,7 @@ const filesrocket = new Filesrocket();
 // Setting service
 const amazons3 = new AmazonS3FileService({
   Pagination: { default: 15, max: 50 },
-  Bucket: "filesrocket",
+  Bucket: "<Your Bucket>",
   region: "<Your Region>",
   credentials: {
     accessKeyId: "<Your ACCESS_KEY>",

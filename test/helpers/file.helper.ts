@@ -4,7 +4,7 @@ import { parse } from 'path'
 
 import service from '../config/amazon'
 
-export async function uploadFile (
+export async function uploadOne (
   path: string,
   query: Query = {}
 ): Promise<Partial<OutputEntity>> {
@@ -21,27 +21,29 @@ export async function uploadFile (
   return service.create(data, query)
 }
 
-export async function uploadManyFiles (
+export async function uploadMany (
   paths: string[],
   query: Query = {}
 ): Promise<Partial<OutputEntity>[]> {
-  return Promise.all(paths.map(path => uploadFile(path, query)))
+  return Promise.all(
+    paths.map(path => uploadOne(path, query))
+  )
 }
 
-export async function getFiles (
+export function findOne (id: string): Promise<OutputEntity> {
+  return service.get(id)
+}
+
+export async function find (
   query: Query = {}
 ): Promise<Paginated<OutputEntity>> {
   return service.list(query)
 }
 
-export async function deleteOneFile (
-  key: string
-): Promise<OutputEntity> {
-  return service.remove(key)
-}
-
-export async function deleteManyFiles (
+export async function remove (
   keys: string[]
 ): Promise<OutputEntity[]> {
-  return Promise.all(keys.map(key => deleteOneFile(key)))
+  return Promise.all(
+    keys.map(key => service.remove(key))
+  )
 }
