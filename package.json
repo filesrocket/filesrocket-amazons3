@@ -36,7 +36,11 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint --fix . --ext .ts",
     "test": "jest",
-    "test:w": "npm run test -- --watch"
+    "test:w": "npm run test -- --watch",
+    "release": "standard-version",
+    "release:minor": "npm run release -- --release-as minor",
+    "release:major": "npm run release -- --release-as major",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "aws-sdk": "2.1012.0",
@@ -54,6 +58,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
     "jest": "^27.4.5",
+    "standard-version": "^9.3.2",
     "ts-jest": "^27.1.2",
     "ts-node": "^10.3.0",
     "typescript": "^4.4.4"
